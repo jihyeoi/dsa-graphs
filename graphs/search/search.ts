@@ -1,18 +1,47 @@
-import { UGraphNodeStr } from "../graph/graph";
+import { UGraphNodeStr, UGraphStr } from "../graph/graph";
+import { Stack } from "../common/stack";
 
 /** Return array of nodes, in DFS order (recursive version)  */
 
 function rDfs(
-    start: UGraphNodeStr,
-    result: string[] = [],
-    visited = new Set([start])): string[] {
-  return ["todo"];
+  start: UGraphNodeStr,
+  result: string[] = [start.value],
+  visited = new Set([start])
+): string[] {
+  for (const n of start.adjacent) {
+    if (!visited.has(n)) {
+      visited.add(n);
+      result.push(n.value);
+      rDfs(n, result, visited);
+    }
+  }
+
+  return result;
 }
 
-/** Return array of nodes, in DFS order (iterative version)  */
+/** Return array of values, in DFS order (iterative version)  */
+
+//
 
 function iDfs(start: UGraphNodeStr): string[] {
-  return ["todo"];
+  let toVisit = new Stack([start]);
+  let seen = new Set([start]);
+  let finalVisited = [];
+
+  while (!toVisit.isEmpty()) {
+    let node = toVisit.pop();
+    console.log(node, "under while");
+    finalVisited.push(node.value);
+
+    for (const n of node.adjacent) {
+      if (!seen.has(n)) {
+        toVisit.push(n);
+        seen.add(n);
+      }
+    }
+  }
+
+  return finalVisited;
 }
 
 /** Return array of nodes, in BFS order (iterative version)  */
@@ -20,6 +49,5 @@ function iDfs(start: UGraphNodeStr): string[] {
 function bfs(start: UGraphNodeStr): string[] {
   return ["todo"];
 }
-
 
 export { iDfs, rDfs, bfs };
